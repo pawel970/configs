@@ -1,0 +1,31 @@
+[mysqld]
+# Hardware Settings
+innodb_buffer_pool_size = 96G
+innodb_log_file_size = 16G
+innodb_log_files_in_group = 2
+innodb_flush_method = O_DIRECT
+
+# Read-Only Slave Config
+read_only = 1
+super_read_only = 1
+sync_binlog = 0
+innodb_flush_log_at_trx_commit = 0
+
+# RAID HDD Optimization 
+innodb_io_capacity = 2000
+innodb_io_capacity_max = 4000
+innodb_read_io_threads = 64
+innodb_write_io_threads = 32
+
+# Replication
+server-id = 2
+relay_log = /var/log/mysql/relay-bin
+relay_log_index = /var/log/mysql/relay-bin.index
+binlog_format = ROW
+
+# Memory & Connections
+thread_cache_size = 128
+max_connections = 4000
+tmp_table_size = 8G
+max_heap_table_size = 8G
+innodb_buffer_pool_instances = 32
