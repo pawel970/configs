@@ -1,0 +1,60 @@
+[mysqld]
+# GENERAL SETTINGS
+user                    = mysql
+bind-address            = 0.0.0.0
+max_connections         = 5000
+skip_name_resolve       = 1
+
+# MEMORY AND BUFFER SETTINGS
+innodb_buffer_pool_size = 180G        # ~70% of total RAM
+innodb_buffer_pool_instances = 16     # Adjusted for concurrency
+innodb_log_file_size    = 8G
+innodb_log_buffer_size  = 512M
+innodb_flush_method     = O_DIRECT
+innodb_flush_log_at_trx_commit = 2    # Balance performance & durability
+innodb_io_capacity      = 5000        # High for NVMe
+innodb_io_capacity_max  = 20000       # Max NVMe throughput
+
+# THREAD AND CPU SETTINGS
+thread_handling         = pool-of-threads
+thread_pool_size        = 64          # Match core count
+thread_cache_size       = 512
+innodb_thread_concurrency = 0         # Auto tuning
+
+# DISK & STORAGE SETTINGS (NVMe optimized)
+innodb_read_io_threads  = 16
+innodb_write_io_threads = 16
+innodb_page_cleaners    = 16
+
+# QUERY CACHE & TEMP TABLES
+query_cache_type        = OFF
+query_cache_size        = 0
+tmp_table_size          = 256M
+max_heap_table_size     = 256M
+
+# LOGGING & MONITORING
+slow_query_log         = 5
+slow_query_log_file    = /var/log/mysql/slow.log
+long_query_time        = 5
+log_error              = /var/log/mysql/error.log
+
+# REPLICATION SETTINGS (ADJUST AS NEEDED)
+server_id              = 1             # Change for each replica
+log_bin                = /var/log/mysql/mariadb-bin
+binlog_format          = ROW
+sync_binlog            = 0             # 0 for performance, 1 for durability
+expire_logs_days       = 7
+gtid_strict_mode       = 1
+enforce_gtid_consistency = 1
+relay_log              = /var/log/mysql/relay-bin
+read_only              = 0             # Set to 1 on slaves
+
+# PERFORMANCE SCHEMA
+performance_schema      = ON
+
+[mysqld_safe]
+numa_interleave        = 1
+
+[client]
+default-character-set   = utf8mb4
+
